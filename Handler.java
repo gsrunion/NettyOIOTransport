@@ -22,7 +22,7 @@ public class Handler extends SimpleChannelInboundHandler<String> {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        ctx.writeAndFlush("AT");
+        ctx.writeAndFlush("AT\n");
     }
 
     @Override

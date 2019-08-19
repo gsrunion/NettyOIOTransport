@@ -1,10 +1,9 @@
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ArrayBlockingQueue;
 
-public class MockSerialPort {
+public class HidDevice {
 	ArrayBlockingQueue<Byte> queue = new ArrayBlockingQueue<>(256);
 		
 	public InputStream getInputStream() {
@@ -12,9 +11,7 @@ public class MockSerialPort {
 			@Override
 			public int read() throws IOException {
 				try {
-					byte b = queue.take();
-					System.out.printf("reading %s in read()\n", new String(new byte[] { b }, StandardCharsets.ISO_8859_1));
-					return b;
+					return queue.take();
 				} catch (InterruptedException e) {
 					throw new IOException();
 				}
@@ -27,7 +24,6 @@ public class MockSerialPort {
 			@Override
 			public void write(int b) throws IOException {
 				try {
-					System.out.printf("Writing %s in write()\n", new String(new byte[] { (byte)b }, StandardCharsets.ISO_8859_1));
 					queue.put((byte) b);
 				} catch(InterruptedException e) {
 					throw new IOException();
@@ -36,13 +32,13 @@ public class MockSerialPort {
 		};
 	}
 
-	public void closePort() {
+	public void close() {
 		System.out.println("closePort");
 	}
 
-	public boolean openPort() {
-		System.out.println("openPort");
-		return true;
+	public HidDevice open(HidDeviceAddress address) throws IOException {
+		System.out.printf("opening with %s\n", address);
+		return this;
 	}
 
 }
